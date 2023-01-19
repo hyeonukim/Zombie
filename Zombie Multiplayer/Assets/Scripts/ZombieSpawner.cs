@@ -5,34 +5,27 @@ using Photon.Pun;
 using UnityEngine;
 
 
-// 좀비 게임 오브젝트를 주기적으로 생성
 public class ZombieSpawner : MonoBehaviourPun, IPunObservable {
-    public Zombie zombiePrefab; // 생성할 좀비 원본 프리팹
+    public Zombie zombiePrefab; 
     
-    public ZombieData[] zombieDatas; // 사용할 좀비 셋업 데이터들
-    public Transform[] spawnPoints; // 좀비 AI를 소환할 위치들
+    public ZombieData[] zombieDatas;
+    public Transform[] spawnPoints;
     
-    private List<Zombie> zombies = new List<Zombie>(); // 생성된 좀비들을 담는 리스트
+    private List<Zombie> zombies = new List<Zombie>(); 
 
-    private int zombieCount = 0; // 남은 좀비 수
-    private int wave; // 현재 웨이브
+    private int zombieCount = 0;
+    private int wave; 
 
-    // 주기적으로 자동 실행되는, 동기화 메서드
+
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info) {
-        // 로컬 오브젝트라면 쓰기 부분이 실행됨
         if (stream.IsWriting)
         {
-            // 남은 좀비 수를 네트워크를 통해 보내기
             stream.SendNext(zombies.Count);
-            // 현재 웨이브를 네트워크를 통해 보내기
             stream.SendNext(wave);
         }
         else
         {
-            // 리모트 오브젝트라면 읽기 부분이 실행됨
-            // 남은 좀비 수를 네트워크를 통해 받기
             zombieCount = (int) stream.ReceiveNext();
-            // 현재 웨이브를 네트워크를 통해 받기 
             wave = (int) stream.ReceiveNext();
         }
     }
