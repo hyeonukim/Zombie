@@ -2,6 +2,9 @@
 
 This repository contains the codebase for a multiplayer game using Photon Unity Networking (PUN). The game features various classes for items, guns, a game manager, and more. Below is an overview of key classes and their functionalities.
 
+## Image of gameplay
+![image](https://github.com/hyeonukim/Zombie/assets/48634064/76529838-f22c-4328-8567-34ef1dd7581c)
+
 ## Table of Contents
 
 - [AmmoPack](#ammopack)
@@ -27,91 +30,117 @@ This repository contains the codebase for a multiplayer game using Photon Unity 
 - [ZombieData](#zombiemanager)
 - [ZombieSpawner](#zombiespawner)
 
-## AmmoPack
+### AmmoPack
+- **Description**: Item class that supplies ammo.
+- **Usage**: Increases the ammo count of the player's gun.
+- **Implementation**: Uses Photon for networking, targets PlayerShooter's gun, and destroys itself after usage.
 
-Supplies ammo to the player when used. Destroys itself after providing ammo.
+### CameraSetup
+- **Description**: For Cinemachine camera to follow the local player.
+- **Usage**: Ensures the camera follows the local player in a multiplayer setting.
+- **Implementation**: Checks if the view is owned by the local player and adjusts the CinemachineVirtualCamera accordingly.
 
-## CameraSetup
+### Coin
+- **Description**: Item class that increases the score.
+- **Usage**: Adds score points to the GameManager.
+- **Implementation**: Uses Photon for networking, updates the GameManager's score, and destroys itself after adding the score.
 
-Sets up the Cinemachine camera to follow the local player.
+### ColorSerialization
+- **Description**: Handles color serialization for networking.
+- **Usage**: Serializes and deserializes Color objects for network synchronization.
+- **Implementation**: Utilizes Photon for custom color serialization and deserialization.
 
-## Coin
+### GameManager
+- **Description**: Manages the game state, player spawning, scoring, and network synchronization.
+- **Usage**: Controls the game flow, tracks score, and handles gameover conditions.
+- **Implementation**: Implements PhotonCallbacks for network events, spawns players, updates score, and transitions between scenes.
+- **Additional Information**: Implements a singleton pattern to ensure only one GameManager exists. It also handles player disconnection and returns them to the lobby scene.
 
-Increases the player's score when used. Destroys itself after updating the score.
+### Gun
+- **Description**: Represents the player's gun with shooting, reloading, and ammo mechanics.
+- **Usage**: Fires bullets, reloads, and syncs gun state over the network.
+- **Implementation**: Uses Photon for networking, handles shooting effects, and incorporates a reload system.
+- **Additional Information**: Uses raycasting for accurate shooting and visual effects. Supports reloading and displays muzzle flash and shell ejection effects.
 
-## ColorSerialization
+### GunData
+- **Description**: ScriptableObject containing data for the Gun class.
+- **Usage**: Defines audio clips, damage, ammo capacity, and other parameters for the gun.
+- **Implementation**: Allows easy customization of gun properties in the Unity editor.
 
-Serializes and deserializes Color objects for network communication.
+### HealthPack
+- **Description**: Item class that restores player health.
+- **Usage**: Restores health to the LivingEntity component of the player.
+- **Implementation**: Uses Photon for networking, targets LivingEntity for health restoration, and destroys itself after usage.
 
-## GameManager
+### IDamageable
+- **Description**: Interface for damageable objects.
+- **Usage**: Implemented by objects that can receive damage.
+- **Implementation**: Defines a method for taking damage.
 
-Manages the overall game state, player instantiation, scoring, and game over conditions.
-
-## Gun
-
-Represents a gun, handles firing, reloading, and network synchronization.
-
-## GunData
-
-Scriptable object containing data for a specific gun, including audio clips, damage, ammo capacity, etc.
-
-## HealthPack
-
-Restores health to the player when used. Destroys itself after healing.
-
-## IDamageable Interface
-
-Interface for objects that can take damage.
-
-## IItem Interface
-
-Interface for every item object. Defines the Use method.
+### IItem
+- **Description**: Interface for every item object.
+- **Usage**: Implemented by items to define their usage behavior.
+- **Implementation**: Defines a method for item usage.
 
 ## ItemSpawner
-
-Spawns items randomly near players at regular intervals.
+- **Description**: Spawns items randomly near players.
+- **Usage**: Generates items at random positions for players to collect.
+- **Implementation**: Uses Photon for networking and spawns items with random intervals.
+- **Additional Information**: Utilizes NavMesh to ensure items spawn on walkable surfaces. Items are destroyed after a specified duration.
 
 ## LivingEntity
-
-Represents 'alive' game objects with health, damage, and death functionality.
+- **Description**: Represents 'alive' game objects with health and damage mechanics.
+- **Usage**: Handles health, damage, and death events.
+- **Implementation**: Uses Photon for networking, synchronizes health over the network, and triggers death events.
+- **Additional Information**: Implements health restoration and death events. The ApplyUpdatedHealth RPC ensures health updates across the network.
 
 ## LobbyManager
+- **Description**: Manages player connection to the game lobby.
+- **Usage**: Connects players to the master server and creates/joins rooms.
+- **Implementation**: Implements PhotonCallbacks for connection events and room joining/creation.
+- **Additional Information**: Handles room creation and joining, and transitions players to the main game scene upon successful room entry.
 
-Handles player connection, room creation, and joining in the lobby screen.
-
-
-### PlayerHealth
-
-Handles health and damage logic for the player character.
+## PlayerHealth
+- **Description**: Manages the health and interactions of the player character.
+- **Usage**: Controls player health, damage, and respawning.
+- **Implementation**: Uses Photon for networking, synchronizes health across the network, and handles player death and respawn.
 
 ## PlayerInput
-
-Manages player input, including movement, rotation, shooting, and reloading.
+- **Description**: Captures player input for movement, rotation, firing, and reloading.
+- **Usage**: Retrieves and updates player input, used to control player movement and actions.
+- **Implementation**: Utilizes Photon for networking, ensures input is only captured on the local player.
 
 ## PlayerMovement
-
-Controls the player's movement based on input.
+- **Description**: Handles player movement based on input.
+- **Usage**: Translates player input into movement and rotation.
+- **Implementation**: Uses Photon for networking, synchronizes movement across the network.
 
 ## PlayerShooter
-
-Handles shooting mechanics and updates the UI accordingly.
+- **Description**: Manages the player's shooting mechanics and UI updates.
+- **Usage**: Controls firing, reloading, and UI updates.
+- **Implementation**: Uses Photon for networking, synchronizes shooting actions and UI updates.
 
 ## Rotator
-
-A simple script to rotate an object.
+- **Description**: Rotates an object over time.
+- **Usage**: Provides a simple rotation effect.
+- **Implementation**: Updates the object's rotation in the Update method.
 
 ## UIManager
-
-Manages the game UI, displaying ammo, score, and wave information.
+- **Description**: Manages the game's UI elements.
+- **Usage**: Updates UI elements such as ammo count, score, and wave information.
+- **Implementation**: Implements a singleton pattern to access UI elements, handles UI updates.
 
 ## Zombie
-
-Represents the behavior of the zombie character, including AI, attacking, and dying.
+- **Description**: Represents the enemy zombie character.
+- **Usage**: Controls zombie AI, movement, and interactions.
+- **Implementation**: Uses Photon for networking, synchronizes zombie AI across the network.
 
 ## ZombieData
-
-A ScriptableObject containing data for different types of zombies.
+- **Description**: Holds data for zombie characteristics.
+- **Usage**: Defines health, damage, speed, and skin color for zombie creation.
+- **Implementation**: Utilizes ScriptableObject to create reusable zombie data.
 
 ## ZombieSpawner
-
-Handles the spawning of zombies based on waves.
+- **Description**: Manages the spawning and synchronization of zombies.
+- **Usage**: Spawns waves of zombies, handles synchronization across the network.
+- **Implementation**: Uses Photon for networking, synchronizes wave information, and spawns zombies based on predefined data.
